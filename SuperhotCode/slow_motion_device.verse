@@ -42,4 +42,18 @@ slow_motion_device := class(creative_device):
           
           # Update Transform object.
           set Transform = FortCharacter.GetTransform()
+          # Gets player position as of current Server Tick.
           NewPosition : vector3 = Transform.Translation
+          # Compare the change between pervious and current positions.
+          # Length() is from SpatialMath, called on a vector3 struct.
+          Distance : float = Abs( LastPosition.Length() - NewPosition.Length() )
+          
+          # If distance is greater than tolerance, then stop the slow motion effect.
+          if(Distance >= Tolerance):
+            # Can't be Pause(), since it'll keep the slowmotion effect from the animation.
+            SlowMotionSequence.Stop()
+          else: 
+            SlowMotionSequence.Play()
+          
+          # Record the current position.
+          set LastPosition = NewPosition
